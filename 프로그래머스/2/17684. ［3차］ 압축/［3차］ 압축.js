@@ -19,7 +19,7 @@ function solution(msg) {
         }
     
         result.push(dict[w]);
-
+        
         if (i + 1 < msg.length) {
           const c = msg[i + 1];
           dict[w + c] = nextIndex;
