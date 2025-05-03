@@ -1,27 +1,29 @@
 function solution(maps) {
-    if(maps===[1]){return 1;}
-    var visit = [];
-    var queue = [[0,0]];
-    var moveX = [-1,1,0,0];
-    var moveY = [0,0,-1,1];
-    var count =1;
-    if(maps[maps.length - 1][maps[0].length - 2] === 0 && maps[maps.length - 2][maps[0].length - 1] === 0) return -1;
-    while(queue.length>0){
-        var queLen = queue.length;
-        for(var q = 0; q<queLen;q++){
-            let [x,y] = queue.shift();
-            for(var i =0;i<4;i++){
-                var newX = x + moveX[i];
-                var newY = y + moveY[i];
-                if(newX===maps[0].length-1&&newY===maps.length-1) return ++count;
-                if(newX>=0&&newY>=0&&newX<maps[0].length&&newY<maps.length&&maps[newY][newX]===1){
-                    queue.push([newX,newY]);
-                    maps[newY][newX] = 0;
-                }
+    const n = maps.length;
+    const m = maps[0].length;
+    
+    const dx = [1,-1,0,0] //상하좌우
+    const dy = [0,0, -1,1]
+    
+    const visited = Array.from({length: n}, () => Array(m).fill(false))
+    let queue = [[0,0,1]]; //x,y, distance
+    visited[0][0] = true;
+    
+    
+    while(queue.length > 0){
+        const[x,y,dist] = queue.shift();
+        
+        if(x === n -1 && y === m - 1)return dist;
+        
+        for(let i = 0; i< 4; i++){
+            const nx = x + dx[i];
+            const ny = y + dy[i];
+            
+            if(nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && maps[nx][ny] === 1){
+                visited[nx][ny] = true;
+                queue.push([nx, ny, dist + 1])
             }
         }
-        count++;
     }
-    
     return -1;
 }
