@@ -1,22 +1,25 @@
 const fs = require('fs');
-const path = process.platform === 'linux' ? '/dev/stdin' : 'test.txt';
-const input = fs.readFileSync(path).toString().trim().split('\n');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'test.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 const [H, W] = input[0].split(' ').map(Number);
-const arr = [...input[1].split(' ').map(Number)];
+const board = input[1].split(' ').map(Number);
 
-function solution(H, W, arr) {
+function solution(W, board) {
   let amountWater = 0;
 
   for (let i = 1; i < W - 1; i++) {
-    let leftMaxHeight = Math.max(...arr.slice(0, i));
-    let rightMaxHeight = Math.max(...arr.slice(i + 1));
-    let basisHeight = Math.min(leftMaxHeight, rightMaxHeight);
+    let maxLeft = Math.max(...board.slice(0, i));
+    let maxRight = Math.max(...board.slice(i + 1));
+    let basisHeight = Math.min(maxLeft, maxRight);
 
-    if (arr[i] < basisHeight) amountWater += basisHeight - arr[i];
+    // if(board[i]){
+    //   amountWater +=
+    // }
+    if (board[i] < basisHeight) amountWater += basisHeight - board[i];
+    // console.log(board[i], i, basisHeight);
   }
-
   return amountWater;
 }
 
-console.log(solution(H, W, arr));
+console.log(solution(W, board));
