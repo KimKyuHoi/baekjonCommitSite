@@ -1,49 +1,70 @@
-function solution(scoville, K) {
-  const heap = [];
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
 
-  // 최소 힙 삽입
-  function push(val) {
-    heap.push(val);
-    let i = heap.length - 1;
+  push(val) {
+    this.heap.push(val);
+    let i = this.heap.length - 1;
     while (i > 0) {
       const parent = Math.floor((i - 1) / 2);
-      if (heap[parent] <= heap[i]) break;
-      [heap[i], heap[parent]] = [heap[parent], heap[i]];
+      if (this.heap[parent] <= this.heap[i]) break;
+      [this.heap[i], this.heap[parent]] = [this.heap[parent], this.heap[i]];
       i = parent;
     }
   }
 
-  // 최소 힙 추출
-  function pop() {
-    if (heap.length === 1) return heap.pop();
-    const min = heap[0];
-    heap[0] = heap.pop();
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+
+    const min = this.heap[0];
+    this.heap[0] = this.heap.pop();
     let i = 0;
+
     while (true) {
-      let left = i * 2 + 1;
-      let right = i * 2 + 2;
+      const left = i * 2 + 1;
+      const right = i * 2 + 2;
       let smallest = i;
 
-      if (left < heap.length && heap[left] < heap[smallest]) smallest = left;
-      if (right < heap.length && heap[right] < heap[smallest]) smallest = right;
+      if (left < this.heap.length && this.heap[left] < this.heap[smallest]) {
+        smallest = left;
+      }
+      if (right < this.heap.length && this.heap[right] < this.heap[smallest]) {
+        smallest = right;
+      }
 
       if (smallest === i) break;
-      [heap[i], heap[smallest]] = [heap[smallest], heap[i]];
+      [this.heap[i], this.heap[smallest]] = [this.heap[smallest], this.heap[i]];
       i = smallest;
     }
+
     return min;
   }
 
-  // 초기 힙 구성
-  scoville.forEach(push);
+  peek() {
+    return this.heap[0];
+  }
+
+  size() {
+    return this.heap.length;
+  }
+}
+
+
+
+function solution(scoville, K) {
+  const heap = new MinHeap();
+
+  scoville.forEach(s => heap.push(s));
 
   let count = 0;
-  while (heap.length > 1 && heap[0] < K) {
-    const a = pop();
-    const b = pop();
-    push(a + b * 2);
+
+  while (heap.size() > 1 && heap.peek() < K) {
+    const a = heap.pop();
+    const b = heap.pop();
+    heap.push(a + b * 2);
     count++;
   }
 
-  return heap[0] >= K ? count : -1;
+  return heap.peek() >= K ? count : -1;
 }
